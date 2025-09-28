@@ -8,7 +8,7 @@ N="\e[0m"  #No Color
 
 LOG_FOLDER="/var/log/shellroboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
-SCRIPT_DIR=$(PWD)
+SCRIPT_DIR=$PWD
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 MONGODB_HOST="mongodb.daws86s.store"
 
@@ -42,7 +42,6 @@ VALIDATE $? "Nodejs installation"
 id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
     echo "Adding roboshop user"
-fi
 else
     echo "roboshop user already exists. $Y Skipping user creation $N" | tee -a $LOG_FILE
 fi
