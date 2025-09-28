@@ -8,6 +8,7 @@ N="\e[0m"  #No Color
 
 LOG_FOLDER="/var/log/shellroboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
+SCRIPT_DIR=$(PWD)
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 MONGODB_HOST="mongodb.daws86s.store"
 
@@ -59,13 +60,13 @@ VALIDATE $? "Changing to /app Directory"
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing nodejs dependencies"
 
-cp catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
 VALIDATE $? "Copying catalogue systemd file"
 
 systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Reloading systemd"
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo 
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 VALIDATE $? "Copying Mongodb repo file"
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
