@@ -43,7 +43,7 @@ id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
     echo "Adding roboshop user"
 else
-    echo "roboshop user already exists. $Y Skipping user creation $N" | tee -a $LOG_FILE
+    echo -e "roboshop user already exists. $Y Skipping user creation $N" | tee -a $LOG_FILE
 fi
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
