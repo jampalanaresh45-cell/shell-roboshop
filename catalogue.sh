@@ -35,7 +35,7 @@ dnf module disable nodejs -y &>>$LOG_FILE
 VALIDATE $? "Disabling Nodejs"
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
-VALIDATE $? "Enabling Nodejs"
+VALIDATE $? "Enabling Nodejs 20"
 
 dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "Nodejs installation"
@@ -49,38 +49,27 @@ fi
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
 VALIDATE $? "Creating system user"
-
 mkdir -p /app 
 VALIDATE $? "Creating application directory"
-
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip >>$LOG_FILE
 VALIDATE $? "Downloading catalogue code application"
-
 cd /app 
 VALIDATE $? "Changing to /app Directory"
-
 rm -rf * &>>$LOG_FILE
 VALIDATE $? "Cleaning old catalogue content"
-
 unzip /tmp/catalogue.zip &>>$LOG_FILE 
 VALIDATE $? "Extracting catalogue code"
-
 cd /app
-
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing nodejs dependencies"
-
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
 VALIDATE $? "Copying catalogue systemd file"
-
 systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Reloading systemd"
-
 systemctl enable catalogue &>>$LOG_FILE
 VALIDATE $? "Enabling catalogue service"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Installing Mongodb client"
 
