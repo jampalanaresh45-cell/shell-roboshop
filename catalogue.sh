@@ -8,8 +8,8 @@ N="\e[0m"  #No Color
 
 LOG_FOLDER="/var/log/shellroboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
+MONGODB_HOST=mongodb.daws86s.store
 SCRIPT_DIR=$PWD
-MONGODB_HOST="mongodb.daws86s.store"
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 
 
