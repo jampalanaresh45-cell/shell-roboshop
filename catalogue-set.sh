@@ -56,7 +56,7 @@ systemctl enable catalogue &>>$LOG_FILE
 
 #####Mongo client installation and catalogue DB setup#####
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-dnf install mongodb-mongo -y &>>$LOG_FILE
+dnf install mongodb-mongosh21 -y &>>$LOG_FILE
 INDEX=$(mongosh --host mongo.daws86s.store --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
 if [ $INDEX -eq 0 ]; then
     mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
