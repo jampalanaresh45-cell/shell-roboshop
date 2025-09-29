@@ -70,7 +70,13 @@ VALIDATE $? "Catalogue service enable"
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Mongosh install"
-mongosh --host $MONGODB_HOST </app/db/master-data.js
-VALIDATE $? "Load catalogue products data"
+
+cd /app/db
+VALIDATE $? "Changing to db directory"
+rm -rf /app/db/* &>>$LOG_FILE
+VALIDATE $? "Cleaning up existing db files"
+
+mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
+VALIDATE $? "Catalogue DB setup"
 systemctl restart catalogue &>>$LOG_FILE
 VALIDATE $? "Restarting catalogue service"
