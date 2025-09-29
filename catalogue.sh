@@ -49,13 +49,16 @@ fi
 
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
 VALIDATE $? "Creating system user"
+
+cd /app 
+VALIDATE $? "Changing to /app Directory"
+rm -rf * &>>$LOG_FILE
+
 mkdir -p /app 
 VALIDATE $? "Creating application directory"
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip >>$LOG_FILE
 VALIDATE $? "Downloading catalogue code application"
-cd /app 
-VALIDATE $? "Changing to /app Directory"
-rm -rf * &>>$LOG_FILE
+
 VALIDATE $? "Cleaning old catalogue content"
 unzip /tmp/catalogue.zip &>>$LOG_FILE 
 VALIDATE $? "Extracting catalogue code"
