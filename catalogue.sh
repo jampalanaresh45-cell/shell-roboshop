@@ -40,8 +40,8 @@ VALIDATE $? "Enabling Nodejs 20"
 dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "Nodejs installation"
 
-userdel --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
-VALIDATE $? "Deleting system user"
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+VALIDATE $? "Creating system user"
 
 cd /app
 rm -rf * &>>$LOG_FILE
