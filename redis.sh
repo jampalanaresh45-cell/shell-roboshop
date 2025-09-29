@@ -11,6 +11,7 @@ SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 MONGODB_HOST=mongo.daws86s.store
 SCRIPT_DIR=$PWD
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
+START_TIME=$(date +%s)
 
 
 mkdir -p $LOG_FOLDER
@@ -50,3 +51,8 @@ VALIDATE $? "Enable Redis service"
 
 systemctl start redis &>>$LOG_FILE
 VALIDATE $? "Start Redis service"
+
+END_TIME=$(date +%s)
+ELAPSED_TIME=$(($END_TIME - $START_TIME))
+echo -e "Total time taken to execute the script: $ELAPSED_TIME seconds"
+echo -e "For more information, please refer to the log file: $LOG_FILE"
