@@ -63,6 +63,7 @@ systemctl enable catalogue &>>$LOG_FILE
 VALIDATE $? "Catalogue service enable"
 
 #####Mongo client installation and catalogue DB setup#####
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Mongosh install"
 mongosh --host $MONGODB_HOST </app/db/master-data.js
