@@ -31,20 +31,41 @@ VALIDATE(){
     fi
     }
 
+###Nodejs installation################
 dnf module disable nodejs -y &>>$LOG_FILE
-VALIDATE $? "Disabling Nodejs"
-
+VALIDATE $? "Nodejs module disable"
 dnf module enable nodejs:20 -y &>>$LOG_FILE
-VALIDATE $? "Enabling Nodejs 20"
-
+VALIDATE $? "Nodejs20 module enabled"
 dnf install nodejs -y &>>$LOG_FILE
-VALIDATE $? "Nodejs installation"
+VALIDATE $? "Nodejs install"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
-VALIDATE $? "Creating system user"
+####Creating roboshop user and application directory#####
+id roboshop &>>$LOG_FILE
+if [ $? -ne 0 ]; then
+    echo "Adding roboshop user"
+else
+    echo -e "roboshop user already exists. $Y..Skipping user creation..$N"
+fi
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+mkdir /app 
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+cd /app 
+unzip /tmp/catalogue.zip &>>$LOG_FILE
+VALIDATE $? "Catalogue unzip"
+cd /app
+npm install &>>$LOG_FILE
+VALIDATE $? "npm dependencies installation"
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
+VALIDATE $? "Catalogue service file copy"
+systemctl daemon-reload &>>$LOG_FILE
+VALIDATE $? "Daemon reload"
+systemctl enable catalogue &>>$LOG_FILE
+VALIDATE $? "Catalogue service enable"
 
-mkdir -p /app &>>$LOG_FILE
-VALIDATE $? "Creating app directory"
-
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip >>$LOG_FILE
-VALIDATE $? "Downloading catalogue code application"
+#####Mongo client installation and catalogue DB setup#####
+dnf install mongodb-mongosh -y &>>$LOG_FILE
+VALIDATE $? "Mongosh install"
+mongosh --host $MONGODB_HOST </app/db/master-data.js
+VALIDATE $? "Load catalogue products data"
+systemctl restart catalogue &>>$LOG_FILE
+VALIDATE $? "Restarting catalogue service"
