@@ -66,7 +66,6 @@ unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "Extracting catalogue code"
 
 cd /app
-VALIDATE $? "Changing to /app Directory"
 
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing nodejs dependencies"
@@ -78,7 +77,6 @@ systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Reloading systemd"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-VALIDATE $? "Copying Mongodb repo file"
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Installing Mongodb client"
