@@ -47,37 +47,10 @@ else
     echo -e "roboshop user already exists. $Y..Skipping user creation..$N"
 fi
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
-VALIDATE $? "Creating system user"
+userdel --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+VALIDATE $? "Deleting system user"
 
 cd /app 
 VALIDATE $? "Changing to /app Directory"
 rm -rf * &>>$LOG_FILE
-
-mkdir -p /app 
-VALIDATE $? "Creating application directory"
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip >>$LOG_FILE
-VALIDATE $? "Downloading catalogue code application"
-
 VALIDATE $? "Cleaning old catalogue content"
-unzip /tmp/catalogue.zip &>>$LOG_FILE 
-VALIDATE $? "Extracting catalogue code"
-cd /app
-npm install &>>$LOG_FILE
-VALIDATE $? "Installing nodejs dependencies"
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
-VALIDATE $? "Copying catalogue systemd file"
-systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "Reloading systemd"
-systemctl enable catalogue &>>$LOG_FILE
-VALIDATE $? "Enabling catalogue service"
-
-cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-dnf install mongodb-mongosh -y &>>$LOG_FILE
-VALIDATE $? "Installing Mongodb client"
-
-mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
-VALIDATE $? "Loading catalogue products data"
-
-systemctl restart catalogue &>>$LOG_FILE
-VALIDATE $? "Restarting catalogue service"
