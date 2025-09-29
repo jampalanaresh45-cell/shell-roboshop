@@ -40,17 +40,9 @@ VALIDATE $? "Enabling Nodejs 20"
 dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "Nodejs installation"
 
-id roboshop &>>$LOG_FILE
-if [ $? -ne 0 ]; then
-    echo "Adding roboshop user"
-else
-    echo -e "roboshop user already exists. $Y..Skipping user creation..$N"
-fi
-
 userdel --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
 VALIDATE $? "Deleting system user"
 
-cd /app 
-VALIDATE $? "Changing to /app Directory"
+cd /app &
 rm -rf * &>>$LOG_FILE
 VALIDATE $? "Cleaning old catalogue content"
