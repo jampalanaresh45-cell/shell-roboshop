@@ -50,6 +50,10 @@ useradd --system --home /app --shell /sbin/nologin --comment "roboshop system us
 mkdir /app 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
 cd /app 
+VALIDATE $? "Changing to app directory"
+rm -rf /app/* &>>$LOG_FILE
+VALIDATE $? "Cleaning up existing code"
+
 unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "Catalogue unzip"
 cd /app
