@@ -1,7 +1,8 @@
 #! /bin/bash
-AMI_ID="ami-09c813fb71547fc4f"
-SG_ID="sg-0b27bdc41b21e4e6d" #Replace with sg id of your ec2 instance
-ZONE_ID="Z002601621GCC3UL69CM8" #Replace with your hosted zone id
+AMI_ID="ami-0220d79f3f480ecf5"
+## SG_ID="sg-0b27bdc41b21e4e6d" #Replace with sg id of your ec2 instance
+SG_ID="sg-056c9d482ddbb3e77" #Replace with sg id of your ec2 instance
+ZONE_ID="Z01475058I1W1ZI7MBLH" #Replace with your hosted zone id
 DOMAIN_NAME="daws86s.store" #Replace with your domain name
 for instance in $@
 do
