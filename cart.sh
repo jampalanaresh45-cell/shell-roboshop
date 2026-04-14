@@ -1,6 +1,5 @@
 #! /bin/bash
 ####Logging in shell script####
-
 USERID=$(id -u)
 R="\e[31m" #Red
 G="\e[32m" #Green
@@ -43,33 +42,35 @@ VALIDATE $? "Nodejs install"
 ####Creating roboshop user and application directory#####
 id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
-    echo "Adding roboshop user"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    VALIDATE $? "Adding roboshop user"
+    
 else
     echo -e "roboshop user already exists. $Y..Skipping user creation..$N"
 fi
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+
 mkdir /app 
-curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
+curl -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip 
 cd /app 
 VALIDATE $? "Changing to app directory"
 rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Cleaning up existing code"
 
-unzip /tmp/user.zip &>>$LOG_FILE
-VALIDATE $? "User unzip"
+unzip /tmp/cart.zip &>>$LOG_FILE
+VALIDATE $? "Cart unzip"
 
 cd /app
 npm install &>>$LOG_FILE
 VALIDATE $? "npm dependencies installation"
 
-cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service &>>$LOG_FILE
-VALIDATE $? "User service file copy"
+cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service &>>$LOG_FILE
+VALIDATE $? "Cart service file copy"
 
 systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Daemon reload"
-systemctl enable user &>>$LOG_FILE
-VALIDATE $? "User service enable"
+systemctl enable cart &>>$LOG_FILE
+VALIDATE $? "Cart service enable"
 
 
-systemctl restart user &>>$LOG_FILE
-VALIDATE $? "Restarting user service"
+systemctl restart cart &>>$LOG_FILE
+VALIDATE $? "Restarting cart service"
