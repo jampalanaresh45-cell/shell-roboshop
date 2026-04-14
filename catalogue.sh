@@ -70,7 +70,7 @@ VALIDATE $? "Catalogue service enable"
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Mongosh install"
-INDEX=$(mongosh mongodb.daws86s.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
+INDEX=$(mongosh mongodb.daws86s.store --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
 if [ $INDEX -le 0 ]; then
     mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
     
