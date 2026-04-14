@@ -29,8 +29,9 @@ fi
 ###Nodejs installation################
 dnf module disable nodejs -y &>>$LOG_FILE
 dnf module enable nodejs:20 -y &>>$LOG_FILE
-
 dnf install nodejs -y &>>$LOG_FILE
+
+echo -e "installing Nodejs 20 ... $G SUCCESS$N"
 
 
 ####Creating roboshop user and application directory#####
@@ -53,6 +54,7 @@ npm install &>>$LOG_FILE
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
 systemctl daemon-reload &>>$LOG_FILE
 systemctl enable catalogue &>>$LOG_FILE
+echo -e "Catalogue application setup ... $G SUCCESS$N"
 
 #####Mongo client installation and catalogue DB setup#####
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
@@ -67,3 +69,4 @@ else
 fi
 
 systemctl restart catalogue &>>$LOG_FILE
+echo -e "Loading products and restarting catalogue ... $G SUCCESS$N"

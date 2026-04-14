@@ -48,37 +48,27 @@ else
 fi
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
 mkdir /app 
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
 cd /app 
 VALIDATE $? "Changing to app directory"
 rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Cleaning up existing code"
 
-unzip /tmp/catalogue.zip &>>$LOG_FILE
-VALIDATE $? "Catalogue unzip"
+unzip /tmp/user.zip &>>$LOG_FILE
+VALIDATE $? "User unzip"
+
 cd /app
 npm install &>>$LOG_FILE
 VALIDATE $? "npm dependencies installation"
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOG_FILE
-VALIDATE $? "Catalogue service file copy"
+
+cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service &>>$LOG_FILE
+VALIDATE $? "User service file copy"
+
 systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Daemon reload"
-systemctl enable catalogue &>>$LOG_FILE
-VALIDATE $? "Catalogue service enable"
+systemctl enable user &>>$LOG_FILE
+VALIDATE $? "User service enable"
 
-#####Mongo client installation and catalogue DB setup#####
-cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
-dnf install mongodb-mongosh -y &>>$LOG_FILE
-VALIDATE $? "Mongosh install"
-INDEX=$(mongosh mongodb.daws86s.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
-if [ $INDEX -le 0 ]; then
-    mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
-    
-else
-    echo -e "Catalogue DB already exists. $Y..Skipping DB load..$N"
 
-fi
-
-VALIDATE $? "Catalogue DB setup"
-systemctl restart catalogue &>>$LOG_FILE
-VALIDATE $? "Restarting catalogue service"
+systemctl restart user &>>$LOG_FILE
+VALIDATE $? "Restarting user service"

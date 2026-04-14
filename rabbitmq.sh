@@ -11,7 +11,7 @@ SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 START_TIME=$(date +%s)
 mkdir -p $LOG_FOLDER
-SCRIPT_DIR=($PWD)
+SCRIPT_DIR=$PWD
 
 
 mkdir -p $LOG_FOLDER
